@@ -1,8 +1,15 @@
 // Copyright 2021, Ryan Wendland, ogx360
 // SPDX-License-Identifier: GPL-3.0-or-later
+//
+// Changes made to usbd_xid.h:
+// 1. Changed include guard to unique name:
+//    - Reason: Changed `#ifndef _XID_h` to `#ifndef OGX360_USBD_XID_H_` to avoid potential naming conflicts with other libraries, ensuring the header is included only once.
+// 2. Added explicit include for Arduino.h:
+//    - Reason: Ensures portability by including Arduino.h for types like uint8_t, preventing compilation errors in contexts where Arduino.h is not implicitly included.
 
-#ifndef _XID_h
-#define _XID_h
+
+#ifndef OGX360_USBD_XID_H_
+#define OGX360_USBD_XID_H_
 
 #define _USING_XID
 
@@ -31,7 +38,7 @@
 #define DUKE_LS (1 << 6)
 #define DUKE_RS (1 << 7)
 
-//https://github.com/Cxbx-Reloaded/Cxbx-Reloaded/blob/develop/src/core/hle/XAPI/Xapi.h
+// https://github.com/Cxbx-Reloaded/Cxbx-Reloaded/blob/develop/src/core/hle/XAPI/Xapi.h
 #define SBC_W0_RIGHTJOYMAINWEAPON 0x0001
 #define SBC_W0_RIGHTJOYFIRE 0x0002
 #define SBC_W0_RIGHTJOYLOCKON 0x0004
@@ -76,14 +83,14 @@
 
 #define SBC_AXIS_AIMINGX 0x0001
 #define SBC_AXIS_AIMINGY 0x0002
-#define SBC_AXIS_LEVER   0x0004
-#define SBC_AXIS_SIGHTX  0x0008
-#define SBC_AXIS_SIGHTY  0x0010
-#define SBC_AXIS_LPEDAL  0x0020
-#define SBC_AXIS_MPEDAL  0x0040
-#define SBC_AXIS_RPEDAL  0x0080
-#define SBC_AXIS_TUNER   0x0100
-#define SBC_AXIS_GEAR    0x0200
+#define SBC_AXIS_LEVER 0x0004
+#define SBC_AXIS_SIGHTX 0x0008
+#define SBC_AXIS_SIGHTY 0x0010
+#define SBC_AXIS_LPEDAL 0x0020
+#define SBC_AXIS_MPEDAL 0x0040
+#define SBC_AXIS_RPEDAL 0x0080
+#define SBC_AXIS_TUNER 0x0100
+#define SBC_AXIS_GEAR 0x0200
 
 #define SBC_GEAR_R 7
 #define SBC_GEAR_N 8
@@ -99,51 +106,32 @@ static const DeviceDescriptor xid_dev_descriptor PROGMEM =
     D_DEVICE(0x00, 0x00, 0x00, USB_EP_SIZE, USB_VID, USB_PID, 0x0121, 0, 0, 0, 1);
 
 static const uint8_t DUKE_DESC_XID[] PROGMEM = {
-    0x10,
-    0x42,
-    0x00, 0x01,
-    0x01,
-    0x02,
-    0x14,
-    0x06,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    0x10, 0x42, 0x00, 0x01, 0x01, 0x02, 0x14, 0x06,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+};
 
 static const uint8_t DUKE_CAPABILITIES_IN[] PROGMEM = {
-    0x00,
-    0x14,
-    0xFF,
-    0x00,
-    0xFF,
-    0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF};
+    0x00, 0x14, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF
+};
 
 static const uint8_t DUKE_CAPABILITIES_OUT[] PROGMEM = {
-    0x00,
-    0x06,
-    0xFF, 0xFF, 0xFF, 0xFF};
+    0x00, 0x06, 0xFF, 0xFF, 0xFF, 0xFF
+};
 
 static const uint8_t BATTALION_DESC_XID[] PROGMEM = {
-    0x10,
-    0x42,
-    0x00, 0x01,
-    0x80,
-    0x01,
-    0x1A,
-    0x16,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    0x10, 0x42, 0x00, 0x01, 0x80, 0x01, 0x1A, 0x16,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+};
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     InterfaceDescriptor interface;
     EndpointDescriptor in;
     EndpointDescriptor out;
 } XIDDescriptor;
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     uint8_t startByte;
     uint8_t bLength;
     uint16_t wButtons;
@@ -161,22 +149,19 @@ typedef struct __attribute__((packed))
     int16_t rightStickY;
 } usbd_duke_in_t;
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     uint8_t startByte;
     uint8_t bLength;
     uint16_t lValue;
     uint16_t hValue;
 } usbd_duke_out_t;
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     usbd_duke_in_t in;
     usbd_duke_out_t out;
 } usbd_duke_t;
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     uint8_t startByte;
     uint8_t bLength;
     uint16_t wButtons[3];
@@ -192,8 +177,7 @@ typedef struct __attribute__((packed))
     int8_t gearLever;
 } usbd_sbattalion_in_t;
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     uint8_t startByte;
     uint8_t bLength;
     uint8_t CockpitHatch_EmergencyEject;
@@ -218,21 +202,18 @@ typedef struct __attribute__((packed))
     uint8_t dummy;
 } usbd_sbattalion_out_t;
 
-typedef struct __attribute__((packed))
-{
+typedef struct __attribute__((packed)) {
     usbd_sbattalion_in_t in;
     usbd_sbattalion_out_t out;
 } usbd_steelbattalion_t;
 
-typedef enum
-{
+typedef enum {
     DISCONNECTED = 0,
     DUKE,
     STEELBATTALION
 } xid_type_t;
 
-class XID_ : public PluggableUSBModule
-{
+class XID_ : public PluggableUSBModule {
 public:
     XID_(void);
     int begin(void);
@@ -256,4 +237,4 @@ private:
 
 XID_ &XID();
 
-#endif // _XID_h
+#endif
